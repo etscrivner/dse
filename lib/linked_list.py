@@ -18,6 +18,12 @@ class LinkedList(object):
         def __init__(self, value, before, after):
             """Initialize.
 
+            This node representation relies on holding a reference to the
+            before and after nodes in order for the linked list to work
+            correctly. Therefore, it should only be replaced by representations
+            that can store references and be passed by reference (eg.
+            mutable data types).
+
             Arguments:
                 value(mixed): The value of the node
                 before(Node or None): The node before this one in the list.

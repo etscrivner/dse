@@ -77,11 +77,15 @@ def choose_from_list(prompt, values, max_attempts=5):
         print prompt
         for num, each in enumerate(values):
             print '{}) {}'.format(num + 1, each)
-        idx = raw_input('Enter a number: ')
+
+        item_num = raw_input('Enter a number: ')
         is_correct_value = yes_no_prompt(
-            'You entered {}. Is this correct?'.format(idx))
+            'You entered {}. Is this correct?'.format(item_num))
+
+        item_num = int(item_num)
         if is_correct_value:
-            return values[(int(idx) - 1)]
+            return values[(int(item_num) - 1)]
+
         num_attempts += 1
     raise RuntimeError('Maximum retries exceeded')
 
