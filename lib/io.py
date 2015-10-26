@@ -9,6 +9,30 @@
 import csv
 
 
+def binary_choice(prompt, first_choice, second_choice):
+    """Displays a prompt asking for one of two possible choices.
+
+    Arguments:
+        prompt(basestring): The prompt to be displayed.
+        first_choice(basestring): The first possible choice.
+        second_choice(basestring): The second possible choice.
+
+    Returns:
+        basestring: The choice selected by the user.
+
+    Raises:
+        RuntimeError: If the choice given is not one of the two available.
+    """
+    choice = raw_input(prompt)
+    if choice.lower() not in (first_choice, second_choice):
+        raise RuntimeError(
+            'Value {} is not one of {} or {}'.format(
+                choice, first_choice, second_choice
+            )
+        )
+    return choice
+
+
 def yes_no_prompt(prompt):
     """Displays a prompt and asks for yes or no input.
 
