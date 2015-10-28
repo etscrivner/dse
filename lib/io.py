@@ -42,7 +42,7 @@ def yes_no_prompt(prompt):
     Returns:
         bool: True if yes, false otherwise.
     """
-    yes_no = raw_input('{} (y/n) '.format(prompt))
+    yes_no = binary_choice('{} (y/n) '.format(prompt), 'y', 'n')
     if yes_no.lower() == 'y':
         return True
     return False

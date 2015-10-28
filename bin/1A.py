@@ -31,6 +31,7 @@ def main():
 
     for each in values:
         print each
+
     print 'Mean: ', statistics.mean(values)
     print 'Std Dev: ', statistics.standard_deviation(values)
 
