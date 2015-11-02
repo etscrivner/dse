@@ -4,7 +4,7 @@
     ~~
     The PSP Exercise 1B Program.
 
-
+    
 """
 import os
 
