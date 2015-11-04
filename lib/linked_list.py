@@ -4,7 +4,7 @@
     ~~~~~~~~~~~~~~~
     A simple linked list implementation.
 
-
+    LinkedList: A simple linked list implementation
 """
 
 

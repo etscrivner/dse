@@ -4,7 +4,15 @@
     ~~~~~~
     General methods useful for I/O.
 
-
+    binary_choice(): Prompt user for a choice between two options.
+    yes_no_prompt(): Ask user a yes-no question and return result.
+    get_and_confirm_input(): Prompt a user for input and confirm value is
+        correct.
+    choose_from_list(): Ask a user to choose an option from a list of options.
+    read_csv_file(): Read the contents of a CSV file into a dictionary.
+    write_numbers_to_file(): Write numbers to given file one per line.
+    read_numbers_from_file(): Read numbers from file, one per line, and return
+        in a list.
 """
 import csv
 
@@ -25,11 +33,7 @@ def binary_choice(prompt, first_choice, second_choice):
     """
     choice = raw_input(prompt)
     if choice.lower() not in (first_choice, second_choice):
-        raise RuntimeError(
-            'Value {} is not one of {} or {}'.format(
-                choice, first_choice, second_choice
-            )
-        )
+        raise RuntimeError('Value {} is not one of {} or {}'.format(choice, first_choice, second_choice))
     return choice
 
 
@@ -126,3 +130,33 @@ def read_csv_file(file_path):
     with open(file_path) as csv_file:
         reader = csv.DictReader(csv_file)
         return list(reader)
+
+
+def write_numbers_to_file(file_name, values):
+    """Writes the given numbers to a file.
+
+    Arguments:
+        file_name(str): The path to the file to write.
+        values(list): A list of values to be written.
+    """
+    with open(file_name, 'w') as out_file:
+        for each in values:
+            out_file.write('{}\n'.format(each))
+
+
+def read_numbers_from_file(file_name):
+    """Reads a list of numbers from a file.
+
+    Arguments:
+        file_name(str): The path to the file to read.
+
+    Returns:
+        list: The numbers from the file as float values.
+    """
+    with open(file_name, 'r') as in_file:
+        results = []
+        for line in in_file.readlines():
+            stripped_line = line.strip()
+            if stripped_line:
+                results.append(float(stripped_line))
+        return results
