@@ -4,6 +4,7 @@
     ~~~~~~
     General methods useful for I/O.
 
+
     binary_choice(): Prompt user for a choice between two options.
     yes_no_prompt(): Ask user a yes-no question and return result.
     get_and_confirm_input(): Prompt a user for input and confirm value is

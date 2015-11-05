@@ -2,7 +2,8 @@
 """
     1B
     ~~
-    The PSP Exercise 1B Program.
+    The PSP Exercise 1B Program. Read or write values from/to a file with
+    interfaces for easy use.
 
 
 """

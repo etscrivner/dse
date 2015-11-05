@@ -4,6 +4,7 @@
     ~~~~~~~~~~~~~~
     Methods for performing statistical calculations
 
+
     mean(): Return the average of an iterable of values.
     standard_deviation(): Return the standard deviation of an iterable of
         values.

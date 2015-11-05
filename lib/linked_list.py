@@ -4,6 +4,7 @@
     ~~~~~~~~~~~~~~~
     A simple linked list implementation.
 
+
     LinkedList: A simple linked list implementation
 """
 
@@ -18,11 +19,12 @@ class LinkedList(object):
         def __init__(self, value, before, after):
             """Initialize.
 
-            This node representation relies on holding a reference to the
-            before and after nodes in order for the linked list to work
-            correctly. Therefore, it should only be replaced by representations
-            that can store references and be passed by reference (eg.
-            mutable data types).
+            This node representation relies on holding a reference, not a value
+            or copy of a value, to the before and after nodes to work
+            correctly. Since nodes both store values and act as values for
+            other nodes, this implementation should only be replaced by an
+            equivalent one that can store references and be passed by reference
+            (eg. mutable data types).
 
             Arguments:
                 value(mixed): The value of the node
