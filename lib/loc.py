@@ -7,7 +7,7 @@
     module_file_from_path(): Converts a file system path into a python module
         name.
     CountTree: Tree data structure for storing lines of code (LOC) counts.
-    SingleFileCounter: Interface for counting lines of code in a single file.    
+    SingleFileCounter: Interface for counting lines of code in a single file.
 """
 import os
 import tokenize

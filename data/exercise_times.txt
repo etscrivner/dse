@@ -1,0 +1,6 @@
+Exercise,Estimated Time,Actual Time
+1A,120,101
+1B,90,36
+2A,60,52
+2B,55,69
+3A,240,195

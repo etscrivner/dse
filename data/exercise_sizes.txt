@@ -1,0 +1,6 @@
+Exercise,Estimated Size,Actual Size
+1A,,91
+1B,,40
+2A,,42
+2B,,109
+3A,250,192

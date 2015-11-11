@@ -115,7 +115,7 @@ def choose_from_list(prompt, values, max_attempts=5):
 
         item_num = int(item_num)
         if is_correct_value:
-            return values[(int(item_num) - 1)]
+            return values[(item_num - 1)]
 
         num_attempts += 1
     raise RuntimeError('Maximum retries exceeded')

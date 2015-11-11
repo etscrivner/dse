@@ -138,7 +138,10 @@ def modify_file(file_path):
         print 'Next Number:'
         print each
         # Let the user choose what to do with the number
-        choice = io.choose_from_list('What would you like to do', ['Keep', 'Modify', 'Delete', 'Keep Rest'])
+        choice = io.choose_from_list(
+            'What would you like to do',
+            ['Keep', 'Modify', 'Delete', 'Keep Rest']
+        )
         choice = choice.lower()
         if choice == 'keep':
             results.append(each)
