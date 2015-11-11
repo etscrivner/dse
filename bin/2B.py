@@ -18,7 +18,6 @@
 import os
 
 from lib import io
-from lib.io import get_and_confirm_input
 
 
 def prompt_for_output_file(original_file_name):
@@ -105,7 +104,7 @@ def add_file(file_path):
         elif choice == 'add number after':
             # Get the new number and add it to the list
             results.append(each)
-            number = get_and_confirm_input("New number: ")
+            number = io.get_and_confirm_input("New number: ")
             results.append(float(number))
         elif choice == 'keep rest':
             # Add remaining numbers to results and exit loop
@@ -144,7 +143,7 @@ def modify_file(file_path):
         if choice == 'keep':
             results.append(each)
         elif choice == 'modify':
-            number = get_and_confirm_input("New value: ")
+            number = io.get_and_confirm_input("New value: ")
             results.append(float(number))
         elif choice == 'keep rest':
             results += numbers[idx:]

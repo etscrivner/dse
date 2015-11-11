@@ -6,7 +6,7 @@
     The PSP Exercise 2A Program.
 
     This program takes a single python filename as a command-line argument and
-displays the number of physical lines of code in the file.
+    displays the number of physical lines of code in the file.
 
     is_single_line_comment(): Indicates whether the given line is a one-line
                               comment.

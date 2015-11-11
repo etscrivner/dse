@@ -16,6 +16,8 @@
         in a list.
 """
 import csv
+import fnmatch
+import os
 
 
 def binary_choice(prompt, first_choice, second_choice):
@@ -161,3 +163,20 @@ def read_numbers_from_file(file_name):
             if stripped_line:
                 results.append(float(stripped_line))
         return results
+
+
+def find_files_matching(path, pattern):
+    """Find all files under the given path matching the given pattern.
+
+    Arguments:
+        path(basestring): A file system path
+        pattern(basestring): The file name pattern to match
+
+    Returns:
+        list: The path of all the matching files found
+    """
+    matches = []
+    for root, dirnames, filenames in os.walk(path):
+        for filename in fnmatch.filter(filenames, '*.py'):
+            matches.append(os.path.join(root, filename))
+    return matches
