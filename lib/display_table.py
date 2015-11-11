@@ -4,6 +4,7 @@
     ~~~~~~~~~~~~~~~~~
     Reusable module that will display a nicely formatted table.
 
+
     DisplayTable: Interface for display data in a nicely formatted table.
 """
 import sys

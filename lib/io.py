@@ -36,7 +36,9 @@ def binary_choice(prompt, first_choice, second_choice):
     """
     choice = raw_input(prompt)
     if choice.lower() not in (first_choice, second_choice):
-        raise RuntimeError('Value {} is not one of {} or {}'.format(choice, first_choice, second_choice))
+        raise RuntimeError('Value {} is not one of {} or {}'.format(
+            choice, first_choice, second_choice
+        ))
     return choice
 
 
