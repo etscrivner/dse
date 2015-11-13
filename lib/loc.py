@@ -261,8 +261,16 @@ class SingleFileCounter(object):
         with open(self.file_path, 'r') as count_file:
             tokens = tokenize.generate_tokens(count_file.readline)
             current_context = self.root_node
-            for token in tokens:
-                current_context = self.parse_token(token, current_context)
+            try:
+                for token in tokens:
+                    current_context = self.parse_token(token, current_context)
+            except tokenize.TokenError as token_error:
+                print(
+                    "ERROR: Failed to parse {} ({} Line {}, Column {})".format(
+                        self.file_path,
+                        token_error.args[0],
+                        token_error.args[1][0],
+                        token_error.args[1][1]))
 
         return self.root_node
 
