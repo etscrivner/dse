@@ -7,8 +7,12 @@
 
     binary_choice(): Prompt user for a choice between two options.
     yes_no_prompt(): Ask user a yes-no question and return result.
+    prompt_try_again_or_abort(): Prompt a user to try an operation again or
+        abort the program.
     get_and_confirm_input(): Prompt a user for input and confirm value is
         correct.
+    get_and_confirm_float(): Prompt a user for input, confirm value, and verify
+        that it is a valid floating point number.
     choose_from_list(): Ask a user to choose an option from a list of options.
     read_csv_file(): Read the contents of a CSV file into a dictionary.
     write_numbers_to_file(): Write numbers to given file one per line.
@@ -57,6 +61,17 @@ def yes_no_prompt(prompt):
     return False
 
 
+def prompt_try_again_or_abort():
+    """Prompt the user to try an operation again or abort the program.
+
+    Raises:
+        RuntimeError: If the user decides to abort the program
+    """
+    choice = binary_choice("(t)ry again or (a)bort? ", 't', 'a')
+    if choice == 'a':
+        raise RuntimeError('Aborting program')
+
+
 def get_and_confirm_input(prompt, max_attempts=5):
     """Get a value from standard input and confirm correctness.
 
@@ -77,6 +92,36 @@ def get_and_confirm_input(prompt, max_attempts=5):
             'You entered {}. Is this correct?'.format(value))
         if is_correct_value:
             return value
+        num_attempts += 1
+    raise RuntimeError('Maximum retries exceeded')
+
+
+def get_and_confirm_float(prompt, max_attempts=5):
+    """Get a floating point value from standard input and confirm correctness.
+
+    Arguments:
+        prompt(basestring): The prompt to be used
+        max_attempts(int): The maximum number of confirmation attempts.
+
+    Returns:
+        float: The input given by the user
+
+    Raises:
+        RuntimeError: If the maximum number of attempts is exceeded, or the
+            user opts to abort after invalid input.
+    """
+    num_attempts = 0
+    while num_attempts < max_attempts:
+        value = raw_input(prompt)
+        try:
+            value = float(value)
+            is_correct_value = yes_no_prompt(
+                'You entered {}. Is this correct?'.format(value))
+            if is_correct_value:
+                return value
+        except ValueError:
+            print "ERROR: {} is not a valid real number.".format(value)
+            prompt_try_again_or_abort()
         num_attempts += 1
     raise RuntimeError('Maximum retries exceeded')
 
@@ -115,9 +160,19 @@ def choose_from_list(prompt, values, max_attempts=5):
         is_correct_value = yes_no_prompt(
             'You entered {}. Is this correct?'.format(item_num))
 
-        item_num = int(item_num)
+        try:
+            item_num = int(item_num)
+        except ValueError:
+            print 'ERROR: {} is an invalid number.'.format(item_num)
+            prompt_try_again_or_abort()
+            is_correct_value = False
+
         if is_correct_value:
-            return values[(item_num - 1)]
+            if item_num > len(values):
+                print 'ERROR: {} is an invalid option.'.format(item_num)
+                prompt_try_again_or_abort()
+            else:
+                return values[(item_num - 1)]
 
         num_attempts += 1
     raise RuntimeError('Maximum retries exceeded')
@@ -178,7 +233,7 @@ def find_files_matching(path, pattern):
         list: The path of all the matching files found
     """
     matches = []
-    for root, dirnames, filenames in os.walk(path):
-        for filename in fnmatch.filter(filenames, '*.py'):
+    for root, _, filenames in os.walk(path):
+        for filename in fnmatch.filter(filenames, pattern):
             matches.append(os.path.join(root, filename))
     return matches
