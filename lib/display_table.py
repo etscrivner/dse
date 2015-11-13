@@ -50,10 +50,12 @@ class DisplayTable(object):
     def display_divider(self):
         """Display divider that separates rows to standard output."""
         column_sizes = self.get_column_sizes()
-        # Create a divider with enough room for columns as well as lines
-        # between columns
+        # Create a divider with enough room for columns as well as lines and
+        # spaces between columns. To do this accounting we add the column
+        # sizes, then 3 additional marks for the 2 spaces and one line around
+        # each word, and finally a single additional mark for the leading line.
         divider_length = sum(column_sizes) + (len(self.column_names) * 3) + 1
-        print '-' * divider_length
+        print '+{}+'.format('-' * (divider_length - 2))
 
     def display_row(self, row):
         """Display the given row of data to standard output.
