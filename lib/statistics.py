@@ -16,6 +16,7 @@
     interquartile_range(): Returns the interquartile range of a list of values.
     outliers(): Returns a list of all of the outliers in a given list of
         values.
+    size_ranges(): Computes log-normal size ranges for a given set of data.
 """
 import math
 
@@ -164,9 +165,33 @@ def outliers(data):
     third_quartile = upper_quartile(data)
     iqr = interquartile_range(data)
 
+    lower_limit = (first_quartile - 1.5 * iqr)
+    upper_limit = (third_quartile + 1.5 * iqr)
+
     results = []
     for each in data:
-        if (each < (first_quartile - 1.5 * iqr) or
-                each > (third_quartile + 1.5 * iqr)):
+        if each < lower_limit or each > upper_limit:
             results.append(each)
     return results
+
+
+def size_ranges(data):
+    """Computes size ranges characterizing given data set.
+
+    Arguments:
+        data(list): A list of real numbered values
+
+    Returns:
+        list: A list containing size ranges characterizing data organized as
+            [Very Small, Small, Medium, Large, Very Large]
+    """
+    log_normal_data = [math.log(each) for each in data]
+    log_avg = mean(log_normal_data)
+    std_dev = standard_deviation(log_normal_data)
+    log_results = [
+        log_avg - 2 * std_dev,
+        log_avg - std_dev,
+        log_avg,
+        log_avg + std_dev,
+        log_avg + 2 * std_dev]
+    return [math.exp(each) for each in log_results]
