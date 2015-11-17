@@ -2,7 +2,7 @@
 """
     relative_size_table
     ~~~~~~~~~~~~~~~~~~~
-    Compute a display a relative size table for given data.
+    Compute and display a relative size table for given data.
 
 
     Application: The object defining the overall application entry point.
@@ -33,7 +33,7 @@ class DisplaySizeTableReport(object):
             print "NO DATA"
             return
 
-        if not self.are_valid_keys(data[0].keys()):
+        if not all([self.are_valid_keys(each.keys()) for each in data]):
             raise RuntimeError(
                 'Invalid data columns {}'.format(data[0].keys()))
 
