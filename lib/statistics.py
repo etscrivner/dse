@@ -102,7 +102,7 @@ def upper_quartile(data):
         float: The upper quartile for the data set
     """
     if len(data) < 2:
-        raise RuntimeError('Too few values given to interquartile range')
+        raise RuntimeError('Too few values given to upper quartile')
 
     sorted_data = sorted(data)
     middle = len(data) / 2
@@ -122,7 +122,7 @@ def lower_quartile(data):
         float: The lower quartile for the data set
     """
     if len(data) < 2:
-        raise RuntimeError('Too few values given to interquartile range')
+        raise RuntimeError('Too few values given to lower quartile')
 
     sorted_data = sorted(data)
     middle = len(data) / 2
@@ -160,7 +160,13 @@ def outliers(data):
 
     Returns:
         list: The outliers from the given set of data
+
+    Raises:
+        RuntimeError: If too few values given
     """
+    if len(data) < 2:
+        raise RuntimeError('Too few values given to outliers')
+
     first_quartile = lower_quartile(data)
     third_quartile = upper_quartile(data)
     iqr = interquartile_range(data)

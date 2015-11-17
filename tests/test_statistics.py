@@ -42,3 +42,87 @@ class TestStandardDeviation(unittest.TestCase):
             2.73861,
             statistics.standard_deviation(range(1, 10)),
             places=5)
+
+
+class TestMedian(unittest.TestCase):
+    def test_should_return_middle_value_if_odd_num_items(self):
+        self.assertEqual(2, statistics.median([1, 2, 3]))
+
+    def test_should_return_average_of_middle_values_if_even_num_items(self):
+        self.assertEqual(2.5, statistics.median([1, 2, 3, 4]))
+
+
+class TestUpperQuartile(unittest.TestCase):
+    def test_should_raise_error_if_too_few_items(self):
+        self.assertRaisesRegexp(
+            RuntimeError,
+            'Too few values given to upper quartile',
+            statistics.upper_quartile,
+            [])
+
+    def test_should_return_correct_value_for_odd_num_items(self):
+        self.assertEqual(
+            6,
+            statistics.upper_quartile([1, 2, 3, 4, 5, 6, 7]))
+
+    def test_should_return_correct_value_for_even_num_items(self):
+        self.assertEqual(
+            5, statistics.upper_quartile([1, 2, 3, 4, 5, 6]))
+
+
+class TestLowerQuartile(unittest.TestCase):
+    def test_should_raise_error_if_too_few_items(self):
+        self.assertRaisesRegexp(
+            RuntimeError,
+            'Too few values given to lower quartile',
+            statistics.lower_quartile,
+            [])
+
+    def test_should_return_correct_value_for_odd_num_items(self):
+        self.assertEqual(2, statistics.lower_quartile([1, 2, 3, 4, 5, 6, 7]))
+
+    def test_should_return_correct_value_for_even_num_items(self):
+        self.assertEqual(2, statistics.lower_quartile([1, 2, 3, 4, 5, 6]))
+
+
+class TestInterquartileRange(unittest.TestCase):
+    def test_should_raise_error_if_too_few_items(self):
+        self.assertRaisesRegexp(
+            RuntimeError,
+            'Too few values given to interquartile range',
+            statistics.interquartile_range,
+            [])
+
+    def test_should_return_correct_value_for_odd_num_items(self):
+        self.assertEqual(
+            4, statistics.interquartile_range([1, 2, 3, 4, 5, 6, 7]))
+
+    def test_should_return_correct_value_For_even_num_items(self):
+        self.assertEqual(
+            3, statistics.interquartile_range([1, 2, 3, 4, 5, 6]))
+
+
+class TestOutliers(unittest.TestCase):
+    def test_should_raise_error_if_too_few_values_given(self):
+        self.assertRaisesRegexp(
+            RuntimeError,
+            'Too few values given to outliers',
+            statistics.outliers,
+            [])
+
+    def test_should_return_empty_list_if_no_outliers(self):
+        self.assertEqual([], statistics.outliers([1, 2, 3, 4, 5, 6, 7]))
+
+    def test_should_return_outliers_if_present(self):
+        self.assertEqual([209], statistics.outliers([1, 2, 3, 4, 5, 209]))
+
+
+class TestSizeRanges(unittest.TestCase):
+    def test_should_return_correct_size_ranges(self):
+        expected = [0.8591994480026335,
+                    1.7041441133233817,
+                    3.3800151591412964,
+                    6.703953255306071,
+                    13.296682746460451]
+        self.assertEqual(
+            expected, statistics.size_ranges([1, 2, 3, 4, 5, 6, 7]))
