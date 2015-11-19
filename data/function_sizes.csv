@@ -6,8 +6,8 @@ choose_from_list,I/O,1,13
 mean,Calculation,1,9
 standard_deviation,Calculation,1,10
 main_1B,Control,1,8
-read_file,I/O,1,4
-write_file,I/O,1,14
+read_file,Control,1,4
+write_file,Control,1,14
 binary_choice,I/O,1,5
 yes_no_prompt,I/O,1,5
 main_2A,Control,1,12

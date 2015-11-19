@@ -4,3 +4,5 @@ Exercise,Estimated Time,Actual Time
 2A,60,52
 2B,55,69
 3A,240,195
+3B,40,48
+RST,67,68

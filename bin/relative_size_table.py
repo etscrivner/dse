@@ -20,6 +20,7 @@ from lib import statistics
 class DisplaySizeTableReport(object):
     """Display relative size table report for given data"""
 
+    # Keys required to be in CSV file for part size data
     REQUIRED_KEYS = ('Name', 'Category', 'Parts', 'Total LOC')
 
     def __init__(self, file_path):
