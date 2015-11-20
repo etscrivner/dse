@@ -16,7 +16,12 @@
     interquartile_range(): Returns the interquartile range of a list of values.
     outliers(): Returns a list of all of the outliers in a given list of
         values.
+    remove_outliers(): Returns lists of values with outliers removed.
     size_ranges(): Computes log-normal size ranges for a given set of data.
+    beta_0(): Returns the beta0 linear regression parameter
+    beta_1(): Returns the beta1 linear regression parameter
+    beta_0_warnings(): Returns warning messages for beta_0 value.
+    beta_1_warnings(): Returns warning messages for beta_1 value.
 """
 import math
 
@@ -181,6 +186,32 @@ def outliers(data):
     return results
 
 
+def remove_outliers(*data_sets):
+    """Removes outlier items from the given data sets.
+
+    Arguments:
+        data_sets(tuple): A list of data sets
+
+    Returns:
+        tuple: Update data sets with outliers removed.
+
+    Raises:
+        RuntimeError: If the data sets do not all have the same length
+    """
+    operating_sets = [each[:] for each in data_sets]
+    unique_lengths = set([len(each) for each in operating_sets])
+    if len(unique_lengths) != 1:
+        raise RuntimeError(
+            'Data sets of different lengths passed to remove outliers')
+    all_outliers = [outliers(each) for each in operating_sets]
+    for idx, item_outliers in enumerate(all_outliers):
+        for outlier in item_outliers:
+            outlier_index = operating_sets[idx].index(outlier)
+            for each in operating_sets:
+                each.pop(outlier_index)
+    return operating_sets
+
+
 def size_ranges(data):
     """Computes size ranges characterizing given data set.
 
@@ -201,3 +232,80 @@ def size_ranges(data):
         log_avg + std_dev,
         log_avg + 2 * std_dev]
     return [math.exp(each) for each in log_results]
+
+
+def beta_1(x_data, y_data):
+    """Calculate the beta_0 linear regression parameter for two sets of related
+    data.
+
+    Arguments:
+        x_data(list): A list of values
+        y_data(list): A list of values
+
+    Returns:
+        float: The beta_0 linear regression parameter
+
+    Raises:
+        RuntimeError: If the data lists are of unequal length
+    """
+    if len(x_data) != len(y_data):
+        raise RuntimeError('X and Y data do not have same number of items')
+    x_avg = mean(x_data)
+    y_avg = mean(y_data)
+    n = len(x_data)
+    dividend = sum([x * y for x, y in zip(x_data, y_data)])
+    dividend -= n * x_avg * y_avg
+    divisor = sum([x**2 for x in x_data])
+    divisor -= n * (x_avg)**2
+    return dividend / float(divisor)
+
+
+def beta_0(x_data, y_data):
+    """Calculate the beta_0 linear regression parameter for two sets of related
+    data.
+
+    Arguments:
+        x_data(list): A list of values
+        y_data(list): A list of values
+
+    Returns:
+        float: The beta_0 linear regression parameter
+
+    Raises:
+        RuntimeError: If the data lists are of unequal length
+    """
+    if len(x_data) != len(y_data):
+        raise RuntimeError('X and Y data do not have same number of items')
+    x_avg = mean(x_data)
+    y_avg = mean(y_data)
+    return y_avg - beta_1(x_data, y_data) * x_avg
+
+
+def beta_0_warnings(beta0):
+    """Print warnings for the given beta0 value.
+
+    Arguments:
+        beta0(float): A beta_0 linear regression parameter
+
+    Returns:
+        list: Contains warning messages for beta value
+    """
+    warnings = []
+    if beta0 > 1.0:
+        warnings.append('Beta0 is not near 0')
+    return warnings
+
+
+def beta_1_warnings(beta1):
+    """Print warnings for the given beta1 value.
+
+    Arguments:
+        beta1(float): A beta_1 linear regression parameter.
+
+    Returns:
+        list: Contains warning messages for beta value
+    """
+    warnings = []
+    if beta1 < 0.5 or beta1 > 2:
+        warnings.append('Beta1 is not near 1')
+    return warnings

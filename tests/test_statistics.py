@@ -126,3 +126,12 @@ class TestSizeRanges(unittest.TestCase):
                     13.296682746460451]
         self.assertEqual(
             expected, statistics.size_ranges([1, 2, 3, 4, 5, 6, 7]))
+
+
+class TestRemoveOutliers(unittest.TestCase):
+    def test_should_correctly_remove_outliers(self):
+        x_data = [1, 2, 3, 4, 5, 209]
+        y_data = [1, 2, 3, 4, 5, 6]
+        x_result, y_result = statistics.remove_outliers(x_data, y_data)
+        self.assertEqual(x_result, [1, 2, 3, 4, 5])
+        self.assertEqual(y_result, [1, 2, 3, 4, 5])

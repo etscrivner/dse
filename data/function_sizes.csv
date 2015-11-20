@@ -23,3 +23,8 @@ modify_file,Control,1,25
 module_from_file_path,Calculation,1,7
 find_files_matching,I/O,1,6
 size_ranges,Calculation,1,6
+remove_outliers,Calculation,1,12
+beta_1,Calculation,1,11
+beta_0,Calculation,1,6
+beta_0_warnings,Calculation,1,5
+beta_1_warnings,Calculation,1,5

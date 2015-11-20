@@ -18,6 +18,8 @@
     write_numbers_to_file(): Write numbers to given file one per line.
     read_numbers_from_file(): Read numbers from file, one per line, and return
         in a list.
+    find_files_matching(): Find all files matching pattern in path and its
+        subdirectories.
 """
 import csv
 import fnmatch
