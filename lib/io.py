@@ -24,6 +24,7 @@
 import csv
 import fnmatch
 import os
+import sys
 
 
 def binary_choice(prompt, first_choice, second_choice):
@@ -71,7 +72,7 @@ def prompt_try_again_or_abort():
     """
     choice = binary_choice("(t)ry again or (a)bort? ", 't', 'a')
     if choice == 'a':
-        raise RuntimeError('Aborting program')
+        sys.exit("Aborting program")
 
 
 def get_and_confirm_input(prompt, max_attempts=5):
