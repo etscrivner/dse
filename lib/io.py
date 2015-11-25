@@ -20,10 +20,15 @@
         in a list.
     find_files_matching(): Find all files matching pattern in path and its
         subdirectories.
+    is_valid_file_name(): Indicates whether or not a file name is valid.
+    prompt_valid_file_name(): Asks the user to input a valid file name.
+    prompt_existant_file_name(): Asks the user to input a valid file name that
+        also corresponds to an existing file.
 """
 import csv
 import fnmatch
 import os
+import re
 import sys
 
 
@@ -240,3 +245,83 @@ def find_files_matching(path, pattern):
         for filename in fnmatch.filter(filenames, pattern):
             matches.append(os.path.join(root, filename))
     return matches
+
+
+def is_valid_file_name(file_name):
+    """Indicates whether or not the given file name is valid.
+
+    Arguments:
+        file_name(basestring): A file name
+
+    Returns:
+        bool: True if the file name is valid, False otherwise.
+    """
+    regex = re.compile(
+        r'^(\{pathsep}?[A-Za-z0-9\-\_\.]+\{pathsep}?)+$'.format(
+            pathsep=os.path.sep))
+    return regex.match(file_name)
+
+
+def prompt_valid_file_name(prompt, max_attempts=5):
+    """Prompt the user to enter a valid file name. Fail after the given number
+    of attempts.
+
+    Arguments:
+        prompt(basestring): The prompt to display to the user
+        max_attempts(int): The maximum number of times the user can attempt to
+            provide a valid file name. Optional, default is 5.
+
+    Returns:
+        basestring: The file name provided by the user
+
+    Raises:
+        RuntimeError: If the user exceeds max_attempts attempts to provide
+            valid input.
+    """
+    while max_attempts > 0:
+        file_name = raw_input(prompt)
+
+        if is_valid_file_name(file_name):
+            return file_name
+
+        print "ERROR: Invalid file name {}".format(file_name)
+        prompt_try_again_or_abort()
+        max_attempts -= 1
+    raise RuntimeError(
+        'ERROR: More than {} attempts made to entire valid file name'.format(
+            max_attempts))
+
+
+def prompt_existant_file_name(prompt, max_attempts=5):
+    """Prompt the user to enter a valid file name. Fail after the given number
+    of attempts.
+
+    Arguments:
+        prompt(basestring): The prompt to display to the user
+        max_attempts(int): The maximum number of times the user can attempt to
+            provide a valid file name. Optional, default is 5.
+
+    Returns:
+        basestring: The file name provided by the user
+
+    Raises:
+        RuntimeError: If the user exceeds max_attempts attempts to provide
+            valid input.
+    """
+    while max_attempts > 0:
+        file_name = raw_input(prompt)
+
+        if is_valid_file_name(file_name):
+            if os.path.exists(file_name):
+                return file_name
+
+            print 'ERROR: File {} does not exist'.format(file_name)
+            prompt_try_again_or_abort()
+            max_attempts
+        else:
+            print "ERROR: Invalid file name {}".format(file_name)
+            prompt_try_again_or_abort()
+            max_attempts -= 1
+    raise RuntimeError(
+        'ERROR: More than {} attempts made to entire valid file name'.format(
+            max_attempts))

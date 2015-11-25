@@ -7,3 +7,4 @@ Exercise,Estimated Time,Actual Time
 3B,40,48
 RST,67,68
 4A,55,128
+4B,44,112
