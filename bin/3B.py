@@ -1,9 +1,9 @@
 # -*- coding: utf-8 -*-
 """
-    2B
+    3B
     ~~
-    The PSP Exercise 2B Program. Modify program 1B to allow for addition and
-    modification of values from a file.
+    The PSP Exercise 3B Program. Modify program 2B to provide additional error
+    handling.
 
 
     prompt_for_output_file(): Prompt a user for an optional new file name.
