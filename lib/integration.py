@@ -1,8 +1,8 @@
 # -*- coding: utf-8 -*-
 """
-    lib.math
-    ~~~~~~~~
-    Math-related modules and classes.n
+    lib.integration
+    ~~~~~~~~~~~~~~~
+    Module for handling numerical integration.
 
     Integrator: Interface that uses Simpson's Rule to numerically integrate a
         function.
