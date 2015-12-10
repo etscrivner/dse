@@ -22,6 +22,8 @@
     beta_1(): Returns the beta1 linear regression parameter
     beta_0_warnings(): Returns warning messages for beta_0 value.
     beta_1_warnings(): Returns warning messages for beta_1 value.
+    normal_distribution(): Returns the probability density of the normal
+        distribution at a given x value.
 """
 import math
 
@@ -309,3 +311,16 @@ def beta_1_warnings(beta1):
     if beta1 < 0.5 or beta1 > 2:
         warnings.append('Beta1 is not near 1')
     return warnings
+
+
+def normal_distribution(x):
+    """Computes the value of the normal distribution probability density
+    function at the given x value.
+
+    Arguments:
+        x(float): The x value at which to compute the probability density.
+
+    Returns:
+        float: The normal distribution value at the given x.
+    """
+    return (1 / math.sqrt(2 * math.pi)) * math.exp(-0.5 * x**2)
