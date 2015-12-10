@@ -144,7 +144,10 @@ class Application(object):
 
     def execute(self):
         """Execute the application and handle any errors"""
-        parser = argparse.ArgumentParser()
+        parser = argparse.ArgumentParser(
+            description=(
+                'Count logical lines of code in a python file or in a set '
+                'of python modules'))
         parser.add_argument(
             'PATH', help='file system path or single file name to be counted.')
         parser.add_argument(

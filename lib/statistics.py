@@ -160,7 +160,11 @@ def outliers(data):
 
     The test to determine if a value is an outlier is if it is less than 1.5
     interquartile ranges (IQRs) below the first quartile, or more than 1.5 IQRs
-    above the third quartile.
+    above the third quartile. Or, more succintly
+
+    Outlier If
+        Value < 1.5 * Q1 or
+        Value > 1.5 * Q3
 
     Arguments:
         data(list): A list of numbers

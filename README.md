@@ -1,9 +1,10 @@
-# Personal Software Process Exercises
+# A Discipine for Software Engineering Exercises
 
-This directory contains the programs I created while completing the Personal
-Software Process (PSP) exercises. In addition, it contains the data and designs
-collected and created when completing the exercises. The folders are organized
-as follows:
+This directory contains the programs I created while completing "A Discipline
+for Software Engineering" by Watts Humphrey. This repository contains my
+Personal Software Process (PSP) exercises. In addition, it contains the data
+and designs collected and created when completing the exercises. The folders
+are organized as follows:
 
 * _bin_ - Contains the binary files for each exercise.
 * _fixtures_ - Contains any data files used to test the exercise programs.

@@ -4,7 +4,8 @@
     ~~
     The PSP Exercise 1A executable program.
 
-
+    This program takes a CSV file and computes the mean and standard deviation
+    for a single row from that CSV file.
 """
 from lib import io
 from lib import linked_list
@@ -13,6 +14,12 @@ from lib import statistics
 
 def main():
     """The application entry point"""
+    print 'EXERCISE 1A'
+    print '==========='
+    print 'This program takes a CSV file, asks you to select a row from that'
+    print 'file, and then computes the mean and standard deviation of the'
+    print 'values in that row.'
+    print
     file_path = io.get_and_confirm_input('Enter csv file with values: ')
     data = io.read_csv_file(file_path)
 

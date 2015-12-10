@@ -2,10 +2,10 @@
 """
     1B
     ~~
-    The PSP Exercise 1B Program. Read or write values from/to a file with
-    interfaces for easy use.
+    The PSP Exercise 1B Program.
 
-
+    This program allows you to write or read a file containing floating point
+    numbers.
 """
 import os
 
@@ -52,9 +52,13 @@ def write_file(file_path):
 
 def main():
     """Application entry point"""
-    print "This program will read or write numbers to or from a given file."
-    file_path = io.get_and_confirm_input('Please enter a file name: ')
+    print "Exercise 1B"
+    print "==========="
+    print "This program allows you to write or read a file containing floating"
+    print "point values."
+    print
     read_write = io.binary_choice('Mode ((r)ead/(w)rite): ', 'r', 'w')
+    file_path = io.get_and_confirm_input('Please enter a file name: ')
     if read_write == 'r':
         read_file(file_path)
     else:

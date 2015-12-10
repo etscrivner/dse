@@ -11,7 +11,25 @@ import sys
 
 
 class DisplayTable(object):
-    """Displays a nicely formatted table to standard output"""
+    """Displays a nicely formatted table to standard output
+
+    Example:
+
+    >>> from lib import display_table
+    >>> table = display_table.DisplayTable(['Project', 'Actual Time (Mins)'])
+    >>> table.add_row(['1A', '120'])
+    >>> table.add_row(['1B', '90'])
+    >>> table.add_row(['2A', '60'])
+    >>> table.display()
+    +------------------------------+
+    | Project | Actual Time (Mins) |
+    +------------------------------+
+    | 1A      | 120                |
+    | 1B      | 90                 |
+    | 2A      | 60                 |
+    +------------------------------+
+
+    """
 
     def __init__(self, column_names):
         """Initialize.

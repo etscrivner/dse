@@ -94,6 +94,8 @@ def main():
     if len(sys.argv) < 2:
         print 'USAGE:'
         print 'program <FILENAME>'
+        print 'Counts physical lines of code in a python file.'
+        print
         print 'FILENAME - A python file whose lines of code will be counted.'
         return
     file_name = sys.argv[1]
