@@ -8,7 +8,7 @@
     module_file_from_path(): Converts a file system path into a python module
         name.
     CountTree: Tree data structure for storing lines of code (LOC) counts.
-    ParsedToken: Abstract of a token parsed from the source file.
+    ParsedToken: Abstraction of a token parsed from a source code file.
     SingleFileCounter: Interface for counting lines of code in a single file.
 """
 import os

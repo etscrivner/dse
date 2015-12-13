@@ -4,7 +4,6 @@
     ~~~~~~
     General methods useful for I/O.
 
-
     binary_choice(): Prompt user for a choice between two options.
     yes_no_prompt(): Ask user a yes-no question and return result.
     prompt_try_again_or_abort(): Prompt a user to try an operation again or
