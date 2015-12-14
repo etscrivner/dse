@@ -5,8 +5,9 @@ ModuleReport,I/O,5,30
 ProgramReport,I/O,3,18
 Application,Control,1,11
 CountTree,Data,4,33
-SingleFileCounter,Usecase,3,46
+SingleFileCounter,Calculation,3,46
 DisplayTable,I/O,6,32
 DisplaySizeTableReport,I/O,6,39
 Application,Control,1,7
 Application,Control,1,33
+Integrator,Calculation,3,26

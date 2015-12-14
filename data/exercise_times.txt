@@ -1,10 +1,9 @@
-Exercise,Estimated Time,Actual Time
-1A,120,101
-1B,90,36
-2A,60,52
-2B,55,69
-3A,240,195
-3B,40,48
-RST,67,68
-4A,55,128
-4B,44,112
+Exercise,Estimated Time,Actual Time,Planned A+M Size
+2A,60,52,30
+2B,55,69,50
+3A,240,195,250
+3B,40,48,20
+RST,67,68,50
+4A,55,128,53
+4B,44,112,37
+5A,161,110,69

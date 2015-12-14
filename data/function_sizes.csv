@@ -31,3 +31,4 @@ beta_1_warnings,Calculation,1,5
 is_valid_file_name,Predicate,1,3
 prompt_valid_file_name,I/O,1,9
 prompt_existant_file_name,I/O,1,14
+is_even,Predicate,1,2
