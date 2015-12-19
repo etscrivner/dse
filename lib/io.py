@@ -23,6 +23,11 @@
     prompt_valid_file_name(): Asks the user to input a valid file name.
     prompt_existant_file_name(): Asks the user to input a valid file name that
         also corresponds to an existing file.
+    read_lists_from_file(): Read and return data from file containing lines
+        of lists.
+    write_lists_to_file(): Write lists to the given file.
+    get_and_confirm_list(): Prompt user for a list of values and return the
+        list given.
 """
 import csv
 import fnmatch
@@ -324,3 +329,70 @@ def prompt_existant_file_name(prompt, max_attempts=5):
     raise RuntimeError(
         'ERROR: More than {} attempts made to entire valid file name'.format(
             max_attempts))
+
+
+def read_lists_from_file(file_path):
+    """Read a file containing a list of real numbers per line and returns all
+    the lists in order.
+
+    Arguments:
+        file_path(basestring): The path to the file to be read.
+
+    Returns:
+        list: A list of all of the lists found
+    """
+    with open(file_path, 'r') as list_file:
+        results = []
+        for each in list_file.readlines():
+            results.append(eval(each))
+        return results
+
+
+def write_lists_to_file(file_path, data):
+    """Write the given list of lists to the given file.
+
+    Arguments:
+        file_path(basestring): The path to the file to write.
+        data(list): A list of lists
+    """
+    with open(file_path, 'w') as list_file:
+        for each in data:
+            list_file.write('{!r}\n'.format(each))
+
+
+def get_and_confirm_list(prompt, max_list_length, max_attempts=10):
+    """Prompt user to enter a comma-separated list of values. Consider invalid
+    any list that exceeds max_list_length. If the input is invalid than allow
+    max_attempts chances to correct it.
+
+    Arguments:
+        prompt(basestring): The prompt to the user.
+        max_list_length(int): Maximum allowed list length.
+        max_attempts(int): Maximum number of attempts to input valid data.
+
+    Raises:
+        RuntimeError: If user exceeds max_attempts tries to input valid data.
+    """
+    while max_attempts > 0:
+        print 'A list is a comma-separated series of values (Ex. 1.23, 3.45)'
+        raw_list = get_and_confirm_input(prompt)
+        parts = re.split(r',\s+', raw_list)
+
+        if len(parts) > max_list_length:
+            print 'error: List {} has more than {} items'.format(
+                raw_list, max_list_length)
+            prompt_try_again_or_abort()
+            max_attempts -= 1
+            continue
+
+        cleaned_parts = []
+        for each in parts:
+            try:
+                cleaned_parts.append(float(each))
+            except ValueError:
+                print 'error: {} is an invalid real number'.format(each)
+                prompt_try_again_or_abort()
+                max_attempts -= 1
+                continue
+
+        return cleaned_parts
