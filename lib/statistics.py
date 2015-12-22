@@ -24,8 +24,18 @@
     beta_1_warnings(): Returns warning messages for beta_1 value.
     normal_distribution(): Returns the probability density of the normal
         distribution at a given x value.
+    make_t_distribution(): Construct a t-distribution function with the given
+        number of degrees of freedom.
+    variance_around_regression(): Computes the variance around the regression
+        of the given values.
+    standard_deviation_around_regression(): Computes the standard deviation
+        around the regression of the given values.
+    prediction_range(): Compute the prediction range for a given estimated
+        value.
 """
 import math
+
+from lib import integration
 
 
 def mean(iterable):
@@ -328,3 +338,90 @@ def normal_distribution(x):
         float: The normal distribution value at the given x.
     """
     return (1 / math.sqrt(2 * math.pi)) * math.exp(-0.5 * x**2)
+
+
+def make_t_distribution(degrees_of_freedom):
+    """Great a t-distribution function with the given number of degrees of
+    freedom.
+
+    Arguments:
+        degrees_of_freedom(float): The degrees of freedom
+
+    Returns:
+        callable: t-distribution function
+    """
+    const = math.gamma((degrees_of_freedom + 1) / 2.0)
+    const /= (
+        math.sqrt(degrees_of_freedom * math.pi) *
+        math.gamma(degrees_of_freedom / 2.0)
+    )
+
+    def tdist(x):
+        result = math.pow(
+            1 + (x**2 / degrees_of_freedom),
+            -((degrees_of_freedom + 1) / 2.0)
+        )
+        return const * result
+
+    return tdist
+
+
+def variance_around_regression(xvalues, yvalues):
+    """Compute the variance around the regression of the given values.
+
+    Arguments:
+        xvalues(list): A list of values
+        yvalues(list): A list of values
+
+    Returns:
+        float: The variance around the regression
+    """
+    n = len(xvalues)
+    b0 = beta_0(xvalues, yvalues)
+    b1 = beta_1(xvalues, yvalues)
+    result = (1.0 / (n - 2))
+    return result * sum([(y - b0 - b1*x)**2 for x, y in zip(xvalues, yvalues)])
+
+
+def standard_deviation_around_regression(xvalues, yvalues):
+    """Computes the standard deviation around the regression of the given
+    lists of values.
+
+    Arguments:
+        xvalues(list): A list of x values.
+        yvalues(list): A list of y values.
+
+    Returns:
+        float: The standard deviation around the regression
+    """
+    return math.sqrt(variance_around_regression(xvalues, yvalues))
+
+
+def prediction_range(x_k, alpha, xvalues, yvalues):
+    """Computes the prediction range for the given alpha value.
+
+    Arguments:
+        x_k(float): An estimated value
+        alpha(float): The t-distribution alpha value.
+        xvalues(list): A list of values
+        yvalues(list): A list of values
+
+    Returns:
+        float: The prediction range
+    """
+    if len(xvalues) < 3 or len(yvalues) < 3:
+        raise RuntimeError('Too few values to compute prediction interval')
+
+    n = len(xvalues)
+    tdist = make_t_distribution(n - 2)
+    integ = integration.Integrator(20, 0.00001)
+    h = lambda x: integ.integrate_minus_infinity_to(tdist, x)
+    std_dev = standard_deviation_around_regression(xvalues, yvalues)
+    t_value = integration.approximate_inverse(h, alpha)
+    x_avg = mean(xvalues)
+
+    const = t_value * std_dev
+    result = 1 + 1.0/n
+    result += (x_k - x_avg)**2 / sum([(x - x_avg)**2 for x in xvalues])
+
+    return const * math.sqrt(result)

@@ -9,5 +9,11 @@ SingleFileCounter,Calculation,3,46
 DisplayTable,I/O,6,32
 DisplaySizeTableReport,I/O,6,39
 Application,Control,1,7
+Application,Control,3,17
 Application,Control,1,33
 Integrator,Calculation,3,26
+ReadFile,Control,1,6
+WriteFile,Control,3,29
+AddToFile,Control,1,26
+ModifyFile,Control,1,23
+Application,Control,2,14
