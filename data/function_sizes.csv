@@ -41,3 +41,13 @@ upper_quartile,Calculation,1,8
 lower_quartile,Calculation,1,6
 interquartile_range,Calculation,1,4
 outliers,Calculation,1,12
+normal_distribution,Calculation,1,2
+make_t_distribution,Calculation,1,7
+variance_around_regression,Calculation,1,6
+standard_deviation_around_regression,Calculation,1,2
+prediction_range,Calculation,1,14
+correlation,Calculation,1,8
+significance,Calculation,1,8
+derivative,Calculation,1,4
+newton_raphson,Calculation,1,9
+approximate_inverse,Calculation,1,3
