@@ -10,6 +10,8 @@
     derivative(): Return a function that returns derivative of given function.
     newton_raphson(): Uses the Newton-Raphson method to compute fixed point
         of the given function.
+    approximate_inverse(): Approximate the inverse of a function at the given
+        point.
 """
 
 
