@@ -135,3 +135,22 @@ class TestRemoveOutliers(unittest.TestCase):
         x_result, y_result = statistics.remove_outliers(x_data, y_data)
         self.assertEqual(x_result, [1, 2, 3, 4, 5])
         self.assertEqual(y_result, [1, 2, 3, 4, 5])
+
+
+class TestCorrelationAndSignificance(unittest.TestCase):
+    def setUp(self):
+        super(TestCorrelationAndSignificance, self).setUp()
+        self.x_data = [186, 699, 132, 272, 291, 331, 199, 1890, 788, 1601]
+        self.y_data = [
+            15.0, 69.9, 6.5, 22.4, 28.4, 65.9, 19.4, 198.7, 38.8, 138.2
+        ]
+
+    def test_should_correctly_compute_correlation(self):
+        # Data from Table A12 in A Discipline for Software Engineering
+        result = statistics.correlation(self.x_data, self.y_data)
+        self.assertAlmostEqual(result, 0.9543158)
+        self.assertAlmostEqual(result**2, 0.9107, 4)
+
+    def test_should_correctly_compute_significance(self):
+        result = statistics.significance(self.x_data, self.y_data)
+        self.assertAlmostEqual(result, 9.0335, 4)

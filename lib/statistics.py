@@ -32,6 +32,9 @@
         around the regression of the given values.
     prediction_range(): Compute the prediction range for a given estimated
         value.
+    correlation(): Computes the correlation between two data sets.
+    significance(): Returns the correlation significance of the given data
+        sets.
 """
 import math
 
@@ -425,3 +428,56 @@ def prediction_range(x_k, alpha, xvalues, yvalues):
     result += (x_k - x_avg)**2 / sum([(x - x_avg)**2 for x in xvalues])
 
     return const * math.sqrt(result)
+
+
+def correlation(x_data, y_data):
+    """Returns the correlation between two data sets.
+
+    Arguments:
+        x_data(list): The first data set
+        y_data(list): The second data set
+
+    Raises:
+        RuntimeError: If the data sets do not have the same length.
+
+    Returns:
+        float: The correlation between the two data sets.
+    """
+    if len(x_data) != len(y_data):
+        raise RuntimeError('Size mismatch between data sets')
+
+    num_items = len(x_data)
+
+    numerator = num_items * sum([x*y for x, y in zip(x_data, y_data)])
+    numerator -= sum(x_data) * sum(y_data)
+
+    denominator = (
+        (num_items * sum([x**2 for x in x_data]) - sum(x_data)**2) *
+        (num_items * sum([y**2 for y in y_data]) - sum(y_data)**2)
+    )
+
+    return numerator / math.sqrt(denominator)
+
+
+def significance(x_data, y_data):
+    """Returns the significance of the correlation between the two data
+    sets.
+
+    Arguments:
+        x_data(list): The first data set
+        y_data(list): The second data set
+
+    Returns:
+        float: The correlation significance
+    """
+    if len(x_data) != len(y_data):
+        raise RuntimeError('Size mismatch between data sets')
+
+    if len(x_data) < 3:
+        raise RuntimeError(
+            'Too few items to perform significance calculation')
+
+    num_items = len(x_data)
+    corr = correlation(x_data, y_data)
+
+    return (abs(corr) * math.sqrt(num_items - 2)) / math.sqrt(1 - corr**2)
