@@ -35,6 +35,7 @@
     correlation(): Computes the correlation between two data sets.
     significance(): Returns the correlation significance of the given data
         sets.
+    LinearRegression: Represents a linear regression.
 """
 import math
 
@@ -480,4 +481,35 @@ def significance(x_data, y_data):
     num_items = len(x_data)
     corr = correlation(x_data, y_data)
 
-    return (abs(corr) * math.sqrt(num_items - 2)) / math.sqrt(1 - corr**2)
+    t_value = (
+        abs(corr) * math.sqrt(num_items - 2.0) /
+        math.sqrt(1.0 - corr**2)
+    )
+
+    tdist = make_t_distribution(len(x_data) - 2)
+    return tdist(t_value)
+
+
+class LinearRegression(object):
+    """Interface for performing a linear regression"""
+
+    def __init__(self, beta0, beta1):
+        """Initialize linear regression.
+
+        Arguments:
+            beta0(float): The beta 0 value.
+            beta1(float): The beta 1 value.
+        """
+        self.beta0 = beta0
+        self.beta1 = beta1
+
+    def estimate(self, proxy_value):
+        """Perform linear regression with the given estimation value.
+
+        Arguments:
+            proxy_value(float): The estimation value
+
+        Returns:
+            float: The project value from the linear regression
+        """
+        return self.beta0 + self.beta1 * proxy_value

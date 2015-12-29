@@ -1,4 +1,4 @@
-Program,Estimated Proxy Size,Estimated A+M LOC,Actual A+M LOC,Estimated Time,Actual Time
+Program,Proxy Size Estimate,Planned A+M Size,Actual A+M Size,Planned Time,Actual Time
 4A,51,53,72,55,128
 4B,37,38.3,19,44,112
 5A,59,69,41,161,110
