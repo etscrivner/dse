@@ -13,6 +13,11 @@
     ProbeSizeA: The linear regression proxy and actual size estimation.
     ProbeSizeB: The linear regression planned and actual size estimation.
     ProbeSizeC: Simple average between planned and actual size estimation.
+    ProbeTimeA: The linear regression proxy size and actual time estimation.
+    ProbeTimeB: The linear regression planned size and actual time estimation.
+    ProbeTimeC1: The average proxy size and actual time.
+    ProbeTimeC2: The average planned size and actual time.
+    ProbeTimeC3: The average actual size and actual time.
 """
 from lib import io
 from lib import statistics
