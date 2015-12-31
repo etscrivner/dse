@@ -37,9 +37,9 @@ def trim_to_equal_length(x_data, y_data):
     if len(x_data) == len(y_data):
         return x_data, y_data
     elif len(x_data) > len(y_data):
-        return x_data[len(y_data):], y_data
+        return x_data[len(y_data)-1:], y_data
     else:
-        return x_data, y_data[len(x_data):]
+        return x_data, y_data[len(x_data)-1:]
 
 
 def collect(key, data):
@@ -356,7 +356,7 @@ class ProbeTimeA(EstimationMethod):
         expected_time = regression.estimate(proxy_value)
         if regression.beta0 > 0.25 * expected_time:
             return False
-        productivity = 1.0 / (sum(proxy_sizes) / sum(actual_times))
+        productivity = 1.0 / (float(sum(proxy_sizes)) / sum(actual_times))
         beta1_range = 0.5 * productivity
         if (regression.beta1 < (productivity - beta1_range) or
                 regression.beta > (productivity + beta1_range)):
