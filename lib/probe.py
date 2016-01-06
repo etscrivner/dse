@@ -37,9 +37,9 @@ def trim_to_equal_length(x_data, y_data):
     if len(x_data) == len(y_data):
         return x_data, y_data
     elif len(x_data) > len(y_data):
-        return x_data[len(y_data)-1:], y_data
+        return x_data[-len(y_data):], y_data
     else:
-        return x_data, y_data[len(x_data)-1:]
+        return x_data, y_data[-len(x_data):]
 
 
 def collect(key, data):
