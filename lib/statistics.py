@@ -460,6 +460,29 @@ def correlation(x_data, y_data):
     return numerator / math.sqrt(denominator)
 
 
+def t_value(x_data, y_data):
+    """Computes the t-distribution significance value for the given two data
+    sets.
+
+    Arguments:
+        x_data(list): The first data set.
+        y_data(list): The second data set.
+
+    Returns:
+        float: The significance t value.
+    """
+    if len(x_data) == 0 or len(y_data) == 0:
+        raise RuntimeError('Must have data in data set')
+    if len(x_data) != len(y_data):
+        raise RuntimeError('Data sets must be of equal length')
+
+    corr = correlation(x_data, y_data)
+    if corr == 1:
+        raise RuntimeError('Invalid data, identical data sets.')
+
+    return abs(corr) * math.sqrt(len(x_data) - 2.0) / math.sqrt(1.0 - corr**2)
+
+
 def significance(x_data, y_data):
     """Returns the significance of the correlation between the two data
     sets.
@@ -469,25 +492,21 @@ def significance(x_data, y_data):
         y_data(list): The second data set
 
     Returns:
-        float: The correlation significance
+        float: The probability of the correlation between the two data sets
+            occurring by chance.
     """
-    if len(x_data) != len(y_data):
-        raise RuntimeError('Size mismatch between data sets')
-
-    if len(x_data) < 3:
+    if len(x_data) < 3 or len(y_data) < 3:
         raise RuntimeError(
             'Too few items to perform significance calculation')
 
-    num_items = len(x_data)
-    corr = correlation(x_data, y_data)
+    if len(x_data) != len(y_data):
+        raise RuntimeError('Size mismatch between data sets')
 
-    t_value = (
-        abs(corr) * math.sqrt(num_items - 2.0) /
-        math.sqrt(1.0 - corr**2)
-    )
-
+    t_val = t_value(x_data, y_data)
     tdist = make_t_distribution(len(x_data) - 2)
-    return tdist(t_value)
+    integ = integration.Integrator(10, 0.00001)
+    p_value = integ.integrate_minus_infinity_to(tdist, t_val)
+    return 2 * (1 - p_value)
 
 
 class LinearRegression(object):

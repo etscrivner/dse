@@ -10,9 +10,10 @@
 import argparse
 import sys
 
-from lib import io
-from lib import statistics
 from lib import integration
+from lib import io
+from lib import probe
+from lib import statistics
 
 
 class Application(object):
@@ -36,10 +37,11 @@ class Application(object):
         columns = csv_data[0].keys()
         x_column = io.choose_from_list('X Column:', columns)
         y_column = io.choose_from_list('Y Column:', columns)
-        x_data = [float(each[x_column]) for each in csv_data]
-        y_data = [float(each[y_column]) for each in csv_data]
+        x_data = [float(each[x_column]) for each in csv_data if each[x_column]]
+        y_data = [float(each[y_column]) for each in csv_data if each[y_column]]
         print
 
+        x_data, y_data = probe.trim_to_equal_length(x_data, y_data)
         print 'X DATA: {}'.format(x_data)
         print 'Y DATA: {}'.format(y_data)
         print

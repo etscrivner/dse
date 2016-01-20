@@ -18,3 +18,14 @@ AddToFile,Control,1,26
 ModifyFile,Control,1,23
 Application,Control,2,14
 Application,Control,1,38
+HistoricalData,Data,2,16
+EstimationMethod,Control,2,6
+ProbeEstimation,Control,3,13
+ProbeSizeA,Control,3,23
+ProbeSizeB,Control,3,23
+ProbeSizeC,Control,3,17
+ProbeTimeA,Control,3,25
+ProbeTimeB,Control,3,25
+ProbeTimeC1,Control,3,12
+ProbeTimeC2,Control,3,12
+ProbeTimeC3,Control,3,12
