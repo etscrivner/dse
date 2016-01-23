@@ -504,7 +504,7 @@ def significance(x_data, y_data):
 
     t_val = t_value(x_data, y_data)
     tdist = make_t_distribution(len(x_data) - 2)
-    integ = integration.Integrator(10, 0.00001)
+    integ = integration.Integrator(10, 10E-6)
     p_value = integ.integrate_minus_infinity_to(tdist, t_val)
     return 2 * (1 - p_value)
 

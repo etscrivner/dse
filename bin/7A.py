@@ -28,8 +28,8 @@ class Application(object):
         columns = csv_data[0].keys()
         x_column = io.choose_from_list('X Column:', columns)
         y_column = io.choose_from_list('Y Column:', columns)
-        x_data = [float(each[x_column]) for each in csv_data]
-        y_data = [float(each[y_column]) for each in csv_data]
+        x_data = [float(each[x_column]) for each in csv_data if each[x_column]]
+        y_data = [float(each[y_column]) for each in csv_data if each[x_column]]
 
         print 'R:', statistics.correlation(x_data, y_data)
         print 'T:', statistics.t_value(x_data, y_data)

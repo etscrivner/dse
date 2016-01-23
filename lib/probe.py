@@ -215,7 +215,7 @@ class ProbeSizeA(EstimationMethod):
         if statistics.correlation(proxy_sizes, actual_sizes)**2 < 0.5:
             return False
         # Weak statistical significance
-        if statistics.significance(proxy_sizes, actual_sizes) < 0.95:
+        if statistics.significance(proxy_sizes, actual_sizes) > 0.05:
             return False
         return True
 
@@ -267,7 +267,7 @@ class ProbeSizeB(EstimationMethod):
             return False
         if statistics.correlation(planned_sizes, actual_sizes)**2 < 0.5:
             return False
-        if statistics.significance(planned_sizes, actual_sizes) < 0.95:
+        if statistics.significance(planned_sizes, actual_sizes) > 0.05:
             return False
         return True
 
@@ -354,20 +354,20 @@ class ProbeTimeA(EstimationMethod):
             return False
         regression = cls(historical_data).get_regression()
         # Beta0 should be small
-        expected_time = regression.estimate(proxy_value)
-        if regression.beta0 > 0.25 * expected_time:
-            return False
+        # expected_time = regression.estimate(proxy_value)
+        # if regression.beta0 > 0.25 * expected_time:
+        #     return False
         # Beta1 one should be close to historical productivity
-        productivity = 1.0 / (float(sum(proxy_sizes)) / sum(actual_times))
-        beta1_range = 0.5 * productivity
-        if (regression.beta1 < (productivity - beta1_range) or
-                regression.beta1 > (productivity + beta1_range)):
-            return False
+        # productivity = 1.0 / (float(sum(proxy_sizes)) / sum(actual_times))
+        # beta1_range = 0.5 * productivity
+        # if (regression.beta1 < (productivity - beta1_range) or
+        #         regression.beta1 > (productivity + beta1_range)):
+        #     return False
         # Correlation should be strong
         if statistics.correlation(proxy_sizes, actual_times)**2 < 0.5:
             return False
         # Correlation should be significant
-        if statistics.significance(proxy_sizes, actual_times) < 0.95:
+        if statistics.significance(proxy_sizes, actual_times) > 0.05:
             return False
         return True
 
@@ -420,7 +420,7 @@ class ProbeTimeB(EstimationMethod):
             return False
         if statistics.correlation(planned_sizes, actual_times)**2 < 0.5:
             return False
-        if statistics.significance(planned_sizes, actual_times) < 0.95:
+        if statistics.significance(planned_sizes, actual_times) > 0.05:
             return False
         return True
 
