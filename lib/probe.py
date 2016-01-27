@@ -8,6 +8,13 @@
     trim_to_equal_length(): Trim two lists to be of equal length.
     collect(): Collect key values into a list from a dict.
     HistoricalData: Represents historical estimation data.
+    CorrelationMixin: Mixin that adds correlation and significance
+        computations.
+    NoPredictionIntervalMixin: Prediction interval mixin that does nothing.
+    PredictionIntervalRangeMixin: Mixin that adds prediction intervals using
+        historical range.
+    PredictionIntervalProductivityMixin: Mixin that adds prediction intervals
+        using historical productivity.
     EstimationMethod: Base class for all size and time estimation methods.
     ProbeEstimation: Interface for perform probe size and time estimation.
     ProbeSizeA: The linear regression proxy and actual size estimation.
@@ -95,7 +102,146 @@ class HistoricalData(object):
                    actual_times=actual_times)
 
 
-class EstimationMethod(object):
+class CorrelationMixin(object):
+    """Mixin that defines correlation and signficance methods."""
+
+    def correlation(self):
+        """Returns the correlation between estimation data values.
+
+        Returns:
+            float: The correlation (R^2) value.
+        """
+        return statistics.correlation(self.x_values, self.y_values)**2
+
+    def significance(self):
+        """Returns the correlation significance.
+
+        Returns:
+            float: The percent chance that values were generated randomly.
+        """
+        return statistics.significance(self.x_values, self.y_values)
+
+
+class NoPredictionIntervalMixin(object):
+    """Prediction interval which does nothing"""
+
+    def get_interval_range(self, estimated_value):
+        return "N/A"
+
+    def get_upi(self, estimated_value):
+        return "N/A"
+
+    def get_lpi(self, estimated_value):
+        return "N/A"
+
+    def get_interval_percent(self):
+        return "N/A"
+
+
+class PredictionIntervalRangeMixin(object):
+    """Mixin that produces prediction interval ranges."""
+
+    def get_interval_range(self, estimated_value):
+        """Return the prediction interval range for the given estimated value.
+
+        Arguments:
+            estimated_value(float): The estimated value.
+
+        Returns:
+            float: The prediction interval range.
+        """
+        return statistics.prediction_range(
+            estimated_value, 0.85, self.x_values, self.y_values)
+
+    def get_upi(self, estimated_value):
+        """Return the upper prediction interval (UPI).
+
+        Arguments:
+            estimated_value(float): The estimated value.
+
+        Returns:
+            float: The upper part of the prediction interval.
+        """
+        regression = self.get_regression()
+        predicted_value = regression.estimate(estimated_value)
+        return predicted_value + self.get_interval_range(estimated_value)
+
+    def get_lpi(self, estimated_value):
+        """Return the lower prediction interval (LPI).
+
+        Arguments:
+            estimated_value(float): The estimated value.
+
+        Returns:
+            float: The upper part of the prediction interval.
+        """
+        regression = self.get_regression()
+        predicted_value = regression.estimate(estimated_value)
+        return predicted_value - self.get_interval_range(estimated_value)
+
+    def get_interval_percent(self):
+        """Returns the interval percent.
+
+        Returns:
+            basestring: The interval percent as a string.
+        """
+        return "70%"
+
+
+class PredictionIntervalProductivityMixin(object):
+    """Prediction interval for time only, using historical productivity"""
+
+    def get_interval_range(self, estimated_value):
+        return "N/A"
+
+    def get_upi(self, estimated_value):
+        """Get upper prediction interval (UPI) using minimum historical
+        productivity.
+
+        Returns:
+            float: The longest estimated time.
+        """
+        regression = self.get_regression()
+        predicted_value = regression.estimate(estimated_value)
+        productivities = self.get_productivities()
+        if not productivities:
+            return "N/A"
+        min_productivity = min(productivities)
+        return (predicted_value / min_productivity) * 60.0
+
+    def get_lpi(self, estimated_value):
+        """Get lower prediction interval (LPI) using maximum historical
+        productivity.
+
+        Returns:
+            float: The shortest estimated time.
+        """
+        regression = self.get_regression()
+        predicted_value = regression.estimate(estimated_value)
+        productivities = self.get_productivities()
+        if not productivities:
+            return "N/A"
+        max_productivity = max(productivities)
+        return (predicted_value / max_productivity) * 60.0
+
+    def get_interval_percent(self):
+        return "N/A"
+
+    def get_productivities(self):
+        """Return historical productivity data.
+
+        Returns:
+            list: List of productivity in LOC / Hour.
+        """
+        actual_sizes = self.historical_data.actual_sizes
+        actual_times = self.historical_data.actual_times
+        return [
+            (size / float(time)) * 60
+            for size, time in zip(actual_sizes, actual_times)
+        ]
+
+
+class EstimationMethod(CorrelationMixin):
     """Base class for all PROBE estimation methods"""
 
     def __init__(self, historical_data):
@@ -164,12 +310,15 @@ class ProbeEstimation(object):
                 return time_method(self.historical_data)
 
 
-class ProbeSizeA(EstimationMethod):
+class ProbeSizeA(EstimationMethod, PredictionIntervalRangeMixin):
     """The proxy size estimate linear regression method for size."""
 
     def __init__(self, historical_data):
         super(ProbeSizeA, self).__init__(historical_data)
         self.name = 'A'
+        self.x_values, self.y_values = trim_to_equal_length(
+            self.historical_data.proxy_sizes,
+            self.historical_data.actual_sizes)
 
     def get_regression(self):
         """Returns the linear regression for this estimation method.
@@ -177,12 +326,9 @@ class ProbeSizeA(EstimationMethod):
         Returns:
             LinearRegression: A linear regression
         """
-        proxy_sizes, actual_sizes = trim_to_equal_length(
-            self.historical_data.proxy_sizes, self.historical_data.actual_sizes
-        )
         return statistics.LinearRegression(
-            statistics.beta_0(proxy_sizes, actual_sizes),
-            statistics.beta_1(proxy_sizes, actual_sizes)
+            statistics.beta_0(self.x_values, self.y_values),
+            statistics.beta_1(self.x_values, self.y_values)
         )
 
     @classmethod
@@ -220,12 +366,15 @@ class ProbeSizeA(EstimationMethod):
         return True
 
 
-class ProbeSizeB(EstimationMethod):
+class ProbeSizeB(EstimationMethod, PredictionIntervalRangeMixin):
     """Estimation method using linear regression on planned and actual size"""
 
     def __init__(self, historical_data):
         super(ProbeSizeB, self).__init__(historical_data)
         self.name = 'B'
+        self.x_values, self.y_values = trim_to_equal_length(
+            self.historical_data.planned_sizes,
+            self.historical_data.actual_sizes)
 
     def get_regression(self):
         """Returns the linear regression for this estimation method.
@@ -233,13 +382,9 @@ class ProbeSizeB(EstimationMethod):
         Returns:
             LinearRegression: A linear regression
         """
-        planned_sizes, actual_sizes = trim_to_equal_length(
-            self.historical_data.planned_sizes,
-            self.historical_data.actual_sizes
-        )
         return statistics.LinearRegression(
-            statistics.beta_0(planned_sizes, actual_sizes),
-            statistics.beta_1(planned_sizes, actual_sizes)
+            statistics.beta_0(self.x_values, self.y_values),
+            statistics.beta_1(self.x_values, self.y_values)
         )
 
     @classmethod
@@ -272,7 +417,7 @@ class ProbeSizeB(EstimationMethod):
         return True
 
 
-class ProbeSizeC(EstimationMethod):
+class ProbeSizeC(EstimationMethod, NoPredictionIntervalMixin):
     """Estimation method using historical average between planned and actual
     size."""
 
@@ -315,12 +460,16 @@ class ProbeSizeC(EstimationMethod):
         return True
 
 
-class ProbeTimeA(EstimationMethod):
+class ProbeTimeA(EstimationMethod, PredictionIntervalRangeMixin):
     """The proxy size estimate linear regression method for time."""
 
     def __init__(self, historical_data):
         super(ProbeTimeA, self).__init__(historical_data)
         self.name = 'A'
+        self.x_values, self.y_values = trim_to_equal_length(
+            self.historical_data.proxy_sizes,
+            self.historical_data.actual_times
+        )
 
     def get_regression(self):
         """Returns the linear regression for this estimation method.
@@ -328,13 +477,9 @@ class ProbeTimeA(EstimationMethod):
         Returns:
             LinearRegression: A linear regression
         """
-        proxy_sizes, actual_times = trim_to_equal_length(
-            self.historical_data.proxy_sizes,
-            self.historical_data.actual_times
-        )
         return statistics.LinearRegression(
-            statistics.beta_0(proxy_sizes, actual_times),
-            statistics.beta_1(proxy_sizes, actual_times))
+            statistics.beta_0(self.x_values, self.y_values),
+            statistics.beta_1(self.x_values, self.y_values))
 
     @classmethod
     def satisfies_preconditions(cls, historical_data, proxy_value):
@@ -372,12 +517,16 @@ class ProbeTimeA(EstimationMethod):
         return True
 
 
-class ProbeTimeB(EstimationMethod):
+class ProbeTimeB(EstimationMethod, PredictionIntervalRangeMixin):
     """The planned size estimate linear regression method for time."""
 
     def __init__(self, historical_data):
         super(ProbeTimeB, self).__init__(historical_data)
         self.name = 'B'
+        self.x_values, self.y_values = trim_to_equal_length(
+            self.historical_data.planned_sizes,
+            self.historical_data.actual_times
+        )
 
     def get_regression(self):
         """Returns the linear regression for this estimation method.
@@ -385,13 +534,9 @@ class ProbeTimeB(EstimationMethod):
         Returns:
             LinearRegression: A linear regression
         """
-        planned_sizes, actual_times = trim_to_equal_length(
-            self.historical_data.planned_sizes,
-            self.historical_data.actual_times
-        )
         return statistics.LinearRegression(
-            statistics.beta_0(planned_sizes, actual_times),
-            statistics.beta_1(planned_sizes, actual_times))
+            statistics.beta_0(self.x_values, self.y_values),
+            statistics.beta_1(self.x_values, self.y_values))
 
     @classmethod
     def satisfies_preconditions(cls, historical_data, proxy_value):
@@ -425,7 +570,7 @@ class ProbeTimeB(EstimationMethod):
         return True
 
 
-class ProbeTimeC1(EstimationMethod):
+class ProbeTimeC1(EstimationMethod, PredictionIntervalProductivityMixin):
     """Estimation method using average of proxy sizes and actual times"""
 
     def __init__(self, historical_data):
@@ -462,7 +607,7 @@ class ProbeTimeC1(EstimationMethod):
         return True
 
 
-class ProbeTimeC2(EstimationMethod):
+class ProbeTimeC2(EstimationMethod, PredictionIntervalProductivityMixin):
     """Estimation method using average of planned sizes and actual times"""
 
     def __init__(self, historical_data):
@@ -500,7 +645,7 @@ class ProbeTimeC2(EstimationMethod):
         return True
 
 
-class ProbeTimeC3(EstimationMethod):
+class ProbeTimeC3(EstimationMethod, PredictionIntervalProductivityMixin):
     """Estimation method using average of actual sizes and actual times"""
 
     def __init__(self, historical_data):
