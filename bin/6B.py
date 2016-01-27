@@ -40,20 +40,20 @@ class Application(object):
         print 'Size'
         print '----'
         print
-        print 'Method: '  + size_method.get_name()
-        print u'\u03B20: {}'.format(regression.beta0)
-        print u'\u03B21: {}'.format(regression.beta1)
-        print 'Projection: {}'.format(regression.estimate(proxy_estimate))
+        print 'Method:', size_method.get_name()
+        print u'\u03B20:', regression.beta0
+        print u'\u03B21:', regression.beta1
+        print 'Projection:', regression.estimate(proxy_estimate)
         print
 
         regression = time_method.get_regression()
         print 'Time'
         print '----'
         print
-        print 'Method: '  + time_method.get_name()
-        print u'\u03B20: {}'.format(regression.beta0)
-        print u'\u03B21: {}'.format(regression.beta1)
-        print 'Projection: {}'.format(regression.estimate(proxy_estimate))
+        print 'Method:', time_method.get_name()
+        print u'\u03B20:', regression.beta0
+        print u'\u03B21:', regression.beta1
+        print 'Projection:', regression.estimate(proxy_estimate)
 
 
 if __name__ == '__main__':
