@@ -8,9 +8,9 @@
     trim_to_equal_length(): Trim two lists to be of equal length.
     collect(): Collect key values into a list from a dict.
     HistoricalData: Represents historical estimation data.
+    NoPredictionIntervalMixin: Prediction interval mixin that does nothing.
     CorrelationMixin: Mixin that adds correlation and significance
         computations.
-    NoPredictionIntervalMixin: Prediction interval mixin that does nothing.
     PredictionIntervalRangeMixin: Mixin that adds prediction intervals using
         historical range.
     PredictionIntervalProductivityMixin: Mixin that adds prediction intervals
@@ -105,7 +105,7 @@ class HistoricalData(object):
 class CorrelationMixin(object):
     """Mixin that defines correlation and signficance methods."""
 
-    def correlation(self):
+    def get_correlation(self):
         """Returns the correlation between estimation data values.
 
         Returns:
@@ -113,7 +113,7 @@ class CorrelationMixin(object):
         """
         return statistics.correlation(self.x_values, self.y_values)**2
 
-    def significance(self):
+    def get_significance(self):
         """Returns the correlation significance.
 
         Returns:
@@ -424,6 +424,10 @@ class ProbeSizeC(EstimationMethod, NoPredictionIntervalMixin):
     def __init__(self, historical_data):
         super(ProbeSizeC, self).__init__(historical_data)
         self.name = 'C'
+        self.x_values, self.y_values = trim_to_equal_length(
+            self.historical_data.actual_sizes,
+            self.historical_data.planned_sizes
+        )
 
     def get_regression(self):
         """Returns the linear regression for this estimation method.
@@ -431,11 +435,7 @@ class ProbeSizeC(EstimationMethod, NoPredictionIntervalMixin):
         Returns:
             LinearRegression: A linear regression
         """
-        planned_sizes, actual_sizes = trim_to_equal_length(
-            self.historical_data.planned_sizes,
-            self.historical_data.actual_sizes
-        )
-        average = (sum(planned_sizes) / float(sum(actual_sizes)))
+        average = (sum(self.x_values) / float(sum(self.y_values)))
         return statistics.LinearRegression(0, average)
 
     @classmethod
@@ -576,6 +576,10 @@ class ProbeTimeC1(EstimationMethod, PredictionIntervalProductivityMixin):
     def __init__(self, historical_data):
         super(ProbeTimeC1, self).__init__(historical_data)
         self.name = 'C1'
+        self.x_values, self.y_values = trim_to_equal_length(
+            self.historical_data.actual_times,
+            self.historical_data.proxy_sizes
+        )
 
     def get_regression(self):
         """Returns the linear regression for this estimation method.
@@ -583,12 +587,8 @@ class ProbeTimeC1(EstimationMethod, PredictionIntervalProductivityMixin):
         Returns:
             LinearRegression: A linear regression
         """
-        proxy_sizes, actual_times = trim_to_equal_length(
-            self.historical_data.proxy_sizes,
-            self.historical_data.actual_times
-        )
         return statistics.LinearRegression(
-            0, sum(actual_times) / float(sum(proxy_sizes)))
+            0, sum(self.x_values) / float(sum(self.y_values)))
 
     @classmethod
     def satisfies_preconditions(cls, historical_data, proxy_value):
@@ -613,6 +613,10 @@ class ProbeTimeC2(EstimationMethod, PredictionIntervalProductivityMixin):
     def __init__(self, historical_data):
         super(ProbeTimeC2, self).__init__(historical_data)
         self.name = 'C2'
+        self.x_values, self.y_values = trim_to_equal_length(
+            self.historical_data.actual_times,
+            self.historical_data.planned_sizes
+        )
 
     def get_regression(self):
         """Returns the linear regression for this estimation method.
@@ -620,12 +624,8 @@ class ProbeTimeC2(EstimationMethod, PredictionIntervalProductivityMixin):
         Returns:
             LinearRegression: A linear regression
         """
-        planned_sizes, actual_times = trim_to_equal_length(
-            self.historical_data.planned_sizes,
-            self.historical_data.actual_times
-        )
         return statistics.LinearRegression(
-            0, sum(actual_times) / float(sum(planned_sizes)))
+            0, sum(self.x_values) / float(sum(self.y_values)))
 
     @classmethod
     def satisfies_preconditions(cls, historical_data, proxy_value):
@@ -651,6 +651,10 @@ class ProbeTimeC3(EstimationMethod, PredictionIntervalProductivityMixin):
     def __init__(self, historical_data):
         super(ProbeTimeC3, self).__init__(historical_data)
         self.name = 'C3'
+        self.x_values, self.y_values = trim_to_equal_length(
+            self.historical_data.actual_times,
+            self.historical_data.actual_sizes
+        )
 
     def get_regression(self):
         """Returns the linear regression for this estimation method.
@@ -658,12 +662,8 @@ class ProbeTimeC3(EstimationMethod, PredictionIntervalProductivityMixin):
         Returns:
             LinearRegression: A linear regression
         """
-        actual_sizes, actual_times = trim_to_equal_length(
-            self.historical_data.actual_sizes,
-            self.historical_data.actual_times
-        )
         return statistics.LinearRegression(
-            0, sum(actual_times) / float(sum(actual_sizes)))
+            0, sum(self.x_values) / float(sum(self.y_values)))
 
     @classmethod
     def satisfies_preconditions(cls, historical_data, proxy_value):

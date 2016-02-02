@@ -47,8 +47,8 @@ class Application(object):
         print 'R^2:', size_method.get_correlation()
         print 'Significance:', size_method.get_significance()
         print 'Range:', size_method.get_interval_range(projected_value)
-        print 'UPI:', size_method.get_upi(projected_value)
-        print 'LPI:', size_method.get_lpi(projected_value)
+        print 'UPI:', size_method.get_upi(proxy_estimate)
+        print 'LPI:', size_method.get_lpi(proxy_estimate)
         print 'Percent:', size_method.get_interval_percent()
         print
 
@@ -64,8 +64,8 @@ class Application(object):
         print 'R^2:', time_method.get_correlation()
         print 'Significance:', time_method.get_significance()
         print 'Range:', time_method.get_interval_range(projected_value)
-        print 'UPI:', time_method.get_upi(projected_value)
-        print 'LPI:', time_method.get_lpi(projected_value)
+        print 'UPI:', time_method.get_upi(proxy_estimate)
+        print 'LPI:', time_method.get_lpi(proxy_estimate)
         print 'Percent:', time_method.get_interval_percent()
 
 if __name__ == '__main__':

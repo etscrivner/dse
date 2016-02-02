@@ -29,3 +29,8 @@ ProbeTimeB,Control,3,25
 ProbeTimeC1,Control,3,12
 ProbeTimeC2,Control,3,12
 ProbeTimeC3,Control,3,12
+Application,Control,1,45
+CorrelationMixin,Calculation,2,5
+NoPredictionIntervalMixin,Calculation,4,9
+PredictionIntervalRangeMixin,Calculation,4,13
+PredictionIntervalProductivityMixin,Calculation,5,25
