@@ -29,7 +29,7 @@ class Application(object):
 
         try:
             for each in data:
-                each[sort_column] = int(each[sort_column])
+                each[sort_column] = float(each[sort_column])
         except ValueError:
             print 'ERROR: Column {} contains non-integer value.'.format(
                 sort_column)
