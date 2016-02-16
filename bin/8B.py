@@ -231,7 +231,7 @@ class SortFile(object):
         input_file = io.prompt_existant_file_name('File to sort:')
         data = io.read_lists_from_file(input_file)
         if not data:
-            print 'ERROR: File {} is empty.'.foramt(input_file)
+            print 'ERROR: File {} is empty.'.format(input_file)
             sys.exit()
         output_file = self.prompt_output_file('File to output to:')
         sort_column = io.choose_from_list(range(len(data[0])))
@@ -241,7 +241,7 @@ class SortFile(object):
             print 'ERROR: Column {} is non-numeric'.format(sort_column)
             sys.exit()
         sorted_data = sort.merge_sort(data, key=lambda x: x[sort_column])
-        io.write_list_to_output_file(output_file, sorted_data)
+        io.write_lists_to_file(output_file, sorted_data)
         print 'Sorted contents written to {}'.format(output_file)
 
     def prompt_output_file(self, prompt, maximum_attempts=5):
@@ -277,7 +277,8 @@ class Application(object):
             'Read': ReadFile,
             'Write': WriteFile,
             'Add': AddToFile,
-            'Modify': ModifyFile
+            'Modify': ModifyFile,
+            'Sort': SortFile
         }
 
     def execute(self):
@@ -289,6 +290,7 @@ class Application(object):
         print 'Write - Input lists of numbers to write to a file.'
         print 'Add - Go through a file line-by-line and add new values.'
         print 'Modify - Go through a file line-by-line and modify values.'
+        print 'Sort - Sort file by select column.'
 
         mode = io.choose_from_list('Choose a mode', self.mode_map.keys())
         mode_class = self.mode_map[mode]

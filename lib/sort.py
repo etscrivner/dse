@@ -31,9 +31,9 @@ def merge_sort(lst, key=None):
         else:
             right.append(value)
 
-    left = merge_sort(left)
-    right = merge_sort(right)
-    return merge(left, right)
+    left = merge_sort(left, key)
+    right = merge_sort(right, key)
+    return merge(left, right, key)
 
 
 def merge(left, right, key=None):
