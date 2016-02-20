@@ -226,7 +226,7 @@ class ModifyFile(object):
 class SortFile(object):
     """Sort given input file on the selected column"""
 
-    def execute(self):
+    def execute(self, _):
         """Sort file contents"""
         input_file = io.prompt_existant_file_name('File to sort:')
         data = io.read_lists_from_file(input_file)
@@ -234,12 +234,13 @@ class SortFile(object):
             print 'ERROR: File {} is empty.'.format(input_file)
             sys.exit()
         output_file = self.prompt_output_file('File to output to:')
-        sort_column = io.choose_from_list(range(len(data[0])))
-        try:
-            data = [float(each[sort_column]) for each in data]
-        except ValueError:
-            print 'ERROR: Column {} is non-numeric'.format(sort_column)
-            sys.exit()
+        sort_column = io.choose_from_list('Sort column', range(len(data[0])))
+        for idx, value in enumerate(data):
+            try:
+                data[idx][sort_column] = float(data[idx][sort_column])
+            except ValueError:
+                print 'ERROR: Column {} is non-numeric'.format(sort_column)
+                sys.exit()
         sorted_data = sort.merge_sort(data, key=lambda x: x[sort_column])
         io.write_lists_to_file(output_file, sorted_data)
         print 'Sorted contents written to {}'.format(output_file)

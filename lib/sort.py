@@ -55,7 +55,7 @@ def merge(left, right, key=None):
         key = lambda x: x
 
     while len(left) > 0 and len(right) > 0:
-        if key(left) <= key(right):
+        if key(left[0]) <= key(right[0]):
             result.append(left.pop(0))
         else:
             result.append(right.pop(0))
