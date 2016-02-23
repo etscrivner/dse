@@ -34,3 +34,4 @@ CorrelationMixin,Calculation,2,5
 NoPredictionIntervalMixin,Calculation,4,9
 PredictionIntervalRangeMixin,Calculation,4,13
 PredictionIntervalProductivityMixin,Calculation,5,25
+SortFile,Control,2,27
