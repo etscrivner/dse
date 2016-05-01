@@ -153,4 +153,4 @@ class TestCorrelationAndSignificance(unittest.TestCase):
 
     def test_should_correctly_compute_significance(self):
         result = statistics.significance(self.x_data, self.y_data)
-        self.assertAlmostEqual(result, 0.99999, 4)
+        self.assertAlmostEqual(result, 2 * (1 - 0.99999), 4)
