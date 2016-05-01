@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 """
-    5B
+    8B
     ~~
     PSP Exercise 5B, in which we add handling arrays of values to the B-series
     programs, and I also venture a rewrite of the program so far.

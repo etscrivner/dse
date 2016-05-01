@@ -39,11 +39,17 @@ class ModuleReport(object):
         print
         self.print_heading('Module Totals')
         print
+        class_methods = tree.num_of_type(loc.CountTree.NodeType.ClassMethod)
         print 'Logical LOC', tree.total_logical_loc()
         print 'Classes', tree.num_of_type(loc.CountTree.NodeType.Class)
-        print 'Class Methods', tree.num_of_type(loc.CountTree.NodeType.ClassMethod)
+        print 'Class Methods', class_methods
         print 'Functions', tree.num_of_type(loc.CountTree.NodeType.Function)
         print
+        if class_methods > 0:
+            class_method_loc = tree.total_logical_loc_of_type(
+                loc.CountTree.NodeType.ClassMethod)
+            print 'LOC / Class Method: ', class_method_loc / class_methods
+            print
 
     def print_module_breakdown(self, tree, indent_level=0):
         """Print module breakdown for the given tree.
