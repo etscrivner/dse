@@ -48,8 +48,8 @@ class Application(object):
         Raises:
             ValueError: If selected column does not contain only numeric data.
         """
-        test_data = io.choose_from_list('Choose test column', data)
-        return [float(each) for each in test_data]
+        column_name = io.choose_from_list('Choose test column', data[0].keys())
+        return [float(each[column_name]) for each in data]
 
 
 if __name__ == '__main__':

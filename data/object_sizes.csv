@@ -35,3 +35,6 @@ NoPredictionIntervalMixin,Calculation,4,9
 PredictionIntervalRangeMixin,Calculation,4,13
 PredictionIntervalProductivityMixin,Calculation,5,25
 SortFile,Control,2,27
+Application,Control,3,16
+ChiSquaredTest,Calculation,6,41
+SegmentRange,Data,3,8

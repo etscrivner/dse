@@ -5,7 +5,7 @@
     Contains interfaces for performing chi-squared test.
 
     SegmentRange: Representation of a numeric range.
-    ChiSquared: Reusable service component for performing chi-squared test.
+    ChiSquaredTest: Reusable service component for performing chi-squared test.
 """
 import math
 
@@ -34,7 +34,7 @@ class SegmentRange(object):
         self.upper_bound = upper_bound
 
     def __hash__(self):
-        return hash((self.lower, self.upper))
+        return hash((self.lower_bound, self.upper_bound))
 
     def in_range(self, value):
         """Indicates whether or not the given value falls within this range.
@@ -49,7 +49,7 @@ class SegmentRange(object):
                 (self.upper_bound is None or value <= self.upper_bound))
 
 
-class ChiSquared(object):
+class ChiSquaredTest(object):
     """Reusable service interface that performs the chi-squared test."""
 
     def execute(self, data):
@@ -65,7 +65,7 @@ class ChiSquared(object):
                 normally distributed.
 
         Raises:
-            ValueError: If there is insufficient data.x
+            ValueError: If there is insufficient data.
         """
         if len(data) < 20:
             raise ValueError('Fewer than 20 items in data set')
@@ -74,7 +74,7 @@ class ChiSquared(object):
 
         normalized_data = self.normalized_data(data)
         num_segments = self.get_number_of_segments(len(data))
-        chi_squared = self.get_chi_squared(normalized_data)
+        chi_squared = self.get_chi_squared(normalized_data, num_segments)
         p_value = self.get_p_value(chi_squared, num_segments)
 
         return (chi_squared, p_value)
