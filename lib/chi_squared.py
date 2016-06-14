@@ -6,6 +6,9 @@
 
     SegmentRange: Representation of a numeric range.
     ChiSquaredTest: Reusable service component for performing chi-squared test.
+    GeneralChiSquaredTest: Reusable service component for performing
+        chi-squared test that does not require data be equally divisible into
+        segments.
 """
 import math
 
@@ -168,3 +171,178 @@ class ChiSquaredTest(object):
         integrator = integration.Integrator(20, 1E-10)
         func = statistics.make_t_distribution(num_segments - 1)
         return integrator.integrate_minus_infinity_to(func, chi_squared)
+
+
+class GeneralChiSquaredTest(ChiSquaredTest):
+    """Reusable service for performing the chi-squared test in a general
+    way.
+
+    Usage:
+    >>> chi_squared, p_value = GeneralChiSquaredTest().execute(data_list)
+
+    """
+
+    # [Integer] The minimum number of items required to perform the test.
+    MINIMUM_ITEMS_REQUIRED = 15
+
+    class TooFewItems(Exception):
+        pass
+
+    def execute(self, data):
+        """Perform the chi-squared test and return the resulting chi-squared
+        and p value.
+
+        Arguments:
+            data(list): List of numeric values to be tested for normality.
+
+        Returns:
+            (float, float): In order: the Q value and p value.
+
+        Raises:
+            TooFewItems: Error if too few items are provided for the test to
+                be properly performed.
+        """
+        if len(data) < self.MINIMUM_ITEMS_REQUIRED:
+            raise self.TooFewItems(
+                'Expected {} items, found {}'.format(
+                    self.MINIMUM_ITEMS_REQUIRED, len(data)))
+
+        normalized_data = self.normalized_data(data)
+        num_segments = self.get_number_of_segments(len(data))
+        chi_squared = self.get_chi_squared(normalized_data, num_segments)
+        p_value = self.get_p_value(chi_squared, num_segments)
+
+        return (chi_squared, p_value)
+
+    def get_chi_squared(self, normalized_data, num_segments):
+        """This routine performs the chi-squared test and returns the value
+        representing the probability that the data is not normally distributed.
+
+        Arguments:
+            normalized_data(list): The normalized data to be tested.
+            num_segments(int): The number of segments to divide the normal
+                distribution into.
+
+        Returns:
+            float: The resulting chi-squared test value.
+        """
+        assert(num_segments > 0,
+               "Expected num_segments > 0, found {}".format(num_segments))
+
+        buckets = self.get_normal_distribution_buckets(
+            len(normalized_data), num_segments)
+        items_per_bucket = [0] * len(buckets)
+
+        for item in normalized_data:
+            for bucket_index, bucket in enumerate(buckets):
+                if item in bucket:
+                    items_per_bucket[bucket_index] += 1
+
+        segment_allocation = self.get_segment_allocation(
+            len(normalized_data), num_segments)
+
+        return sum([
+            (expected - actual)**2 / float(expected)
+            for expected, actual in zip(segment_allocation, items_per_bucket)
+        ])
+
+    def get_segment_allocation(self, num_items, num_segments):
+        """This routine divides the normal distribution into the given number
+        of segments. If the given number of data points cannot be divided
+        evenly into the number of segments, then unequal segments are created
+        beginning from the center and working outward.
+
+        Arguments:
+            num_items(int): The number of items to be tested.
+            num_segments(int): The number of segments to divide the normal
+                distribution into.
+
+        Returns:
+            list: A list containing the number of items allocated to each
+                segment, where segments are taken to be ordered as the list is.
+
+        Raises:
+            AssertionError: If the number of segments is invalid.
+        """
+        assert(num_segments > 0,
+               "number of segments is fewer than 1: {}".format(num_segments))
+
+        # Record the integer number of items in each segment
+        items_per_segment = int(num_items / num_segments)
+        # Create an initial even allocation of items to segments
+        results = [items_per_segment] * num_segments
+
+        # If the number of items cannot be evenly divided into the number of
+        # segments
+        if not self.divides_evenly_into_segments(num_items, num_segments):
+            # Compute the number of extra items after equal allocation
+            num_extra_items = num_items - (items_per_segment * num_segments)
+            # Allocate the extra items starting from the center and working out
+            offset = 0
+            center = (num_segments + 1) / 2.0
+            for i in range(num_extra_items):
+                # Verify the loop precondition
+                assert(int(math.floor(center + offset)) < num_segments,
+                       "offset index {} is out of range {}".format(
+                           int(math.floor(center + offset)), num_segments))
+
+                if offset < 0:
+                    results[int(math.floor(center + offset))] += 1
+                    offset = -offset
+                else:
+                    results[int(math.floor(center + offset))] += 1
+                    offset = -(offset + 1)
+
+        return results
+
+    def divides_evenly_into_segments(self, num_items, num_segments):
+        """This predicate indicates whether or not the given number of items
+        can be divided evenly into the given number of segments.
+
+        Arguments:
+            num_items(int): The number of items to be tested.
+            num_segments(int): The number of segments to divide the normal
+                distribution into.
+
+        Returns:
+            bool: True if the items can be divided evenly, False otherwise.
+        """
+        ratio = num_items / float(num_segments)
+        return int(ratio) == ratio
+
+    def get_normal_distribution_buckets(self, num_items, num_segments):
+        """This routine divides the normal distribution into the given number
+        of segments. It then creates a segment range for each segment based on
+        the number of items expected to fall within it. It returns a list of
+        segment ranges.
+
+        Arguments:
+            num_items(int): The number of items to be tested.
+            num_segments(int): The number of segments to divide the normal
+                distribution into.
+
+        Returns:
+            list: A list of SegmentRange objects for each segment.
+        """
+        assert(num_segments > 0,
+               "number of segments is less than 1: {}".format(num_segments))
+
+        integrator = integration.Integrator(20, 1E-10)
+        func = lambda x: integrator.integrate_minus_infinity_to(
+            statistics.normal_distribution, x)
+
+        results = []
+        cumulative_probability = 0
+        previous_upper_bound = None
+        segment_allocation = self.get_segment_allocation(
+            num_items, num_segments)
+
+        for items_in_segment in segment_allocation[:-1]:
+            cumulative_probability += items_in_segment / float(num_items)
+            upper_bound = integration.approximate_inverse(
+                func, cumulative_probability)
+            results.append(SegmentRange(previous_upper_bound, upper_bound))
+            previous_upper_bound = upper_bound
+
+        results.append(SegmentRange(previous_upper_bound, None))
+        return results
