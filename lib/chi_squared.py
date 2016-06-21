@@ -268,7 +268,7 @@ class GeneralChiSquaredTest(ChiSquaredTest):
                "number of segments is fewer than 1: {}".format(num_segments))
 
         # Record the integer number of items in each segment
-        items_per_segment = int(num_items / num_segments)
+        items_per_segment = int(num_items / float(num_segments))
         # Create an initial even allocation of items to segments
         results = [items_per_segment] * num_segments
 

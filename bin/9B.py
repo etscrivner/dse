@@ -27,7 +27,8 @@ class Application(object):
         test_data = self.get_test_column(data)
         q_val, p_val = chi_squared.GeneralChiSquaredTest().execute(test_data)
         print 'Q: ', q_val
-        print 'P: ', 1.0 - p_val
+        print 'P: ', p_val
+        print '1-P: ', 1.0 - p_val
 
     def get_file_name(self):
         """Display a prompt to the user requesting data.
@@ -38,7 +39,7 @@ class Application(object):
         try:
             return io.prompt_valid_file_name('Enter test data file:')
         except RuntimeError as re:
-            self.display_error('Invalid or missed test file provided.')
+            self.display_error('Invalid or missing test file provided.')
             raise re
 
     def get_test_column(self, data):
