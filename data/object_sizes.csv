@@ -38,3 +38,5 @@ SortFile,Control,2,27
 Application,Control,3,16
 ChiSquaredTest,Calculation,6,41
 SegmentRange,Data,3,8
+GeneralChiSquaredTest,Calculation,5,57
+Application,Control,4,32

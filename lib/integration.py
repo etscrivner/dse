@@ -106,7 +106,7 @@ def derivative(f, dx=10E-8):
     return df
 
 
-def newton_raphson(f, guess, tolerance=10E-8):
+def newton_raphson(f, guess, tolerance=1E-8):
     """Use the Newton-Raphson method to compute the fixed-point of the given
     function.
 

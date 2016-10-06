@@ -39,6 +39,11 @@ class SegmentRange(object):
     def __hash__(self):
         return hash((self.lower_bound, self.upper_bound))
 
+    def __repr__(self):
+        lower_repr = self.lower_bound if self.lower_bound else "-∞"
+        upper_repr = self.upper_bound if self.upper_bound else "∞"
+        return "[{}, {}]".format(lower_repr, upper_repr)
+
     def in_range(self, value):
         """Indicates whether or not the given value falls within this range.
 
@@ -235,7 +240,7 @@ class GeneralChiSquaredTest(ChiSquaredTest):
 
         for item in normalized_data:
             for bucket_index, bucket in enumerate(buckets):
-                if item in bucket:
+                if bucket.in_range(item):
                     items_per_bucket[bucket_index] += 1
 
         segment_allocation = self.get_segment_allocation(
@@ -270,13 +275,15 @@ class GeneralChiSquaredTest(ChiSquaredTest):
         # Record the integer number of items in each segment
         items_per_segment = int(num_items / float(num_segments))
         # Create an initial even allocation of items to segments
-        results = [items_per_segment] * num_segments
+        results = [items_per_segment] * int(num_segments)
 
         # If the number of items cannot be evenly divided into the number of
         # segments
         if not self.divides_evenly_into_segments(num_items, num_segments):
             # Compute the number of extra items after equal allocation
-            num_extra_items = num_items - (items_per_segment * num_segments)
+            num_extra_items = (
+                num_items - int(items_per_segment * num_segments)
+            )
             # Allocate the extra items starting from the center and working out
             offset = 0
             center = (num_segments + 1) / 2.0
